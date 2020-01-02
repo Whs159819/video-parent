@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.dao.CourseMapper">
+
+    <resultMap id="getCourseAndSub" type="com.qf.entity.Course">
+        <id property="id" column="id"></id>
+        <result property="course_title" column="course_title"></result>
+        <result property="course_desc" column="course_desc"></result>
+        <result property="subject_id" column="subject_id"></result>
+        <association property="subject" javaType="com.qf.entity.Subject">
+            <id property="id" column="id"></id>
+            <result property="subject_name" column="subject_name"></result>
+        </association>
+    </resultMap>
+
+
+    <select id="getAllCourse" resultMap="getCourseAndSub">
+        select * from course,subject
+        where course.subject_id=subject.id
+        limit #{start}, #{rows}
+    </select>
+    
+    <select id="getAllSubject" resultType="com.qf.entity.Subject">
+        select * from subject
+    </select>
+    
+    <select id="getCourseCount" resultType="Integer">
+        select count(1) from course
+    </select>
+    
+    <select id="getCourseById" resultType="com.qf.entity.Course">
+        select * from course where id=#{id}
+    </select>
+    
+    <delete id="delCourseById" parameterType="Integer">
+        delete from course where id=#{id}
+    </delete>
+    
+    <update id="updateCourseById" parameterType="com.qf.entity.Course">
+        update course set
+        <if test="course_title !=null and course_title !=''">
+           `course_title`= #{course_title},
+        </if>
+        <if test="course_desc !=null and course_desc !=''">
+            `course_desc`= #{course_desc},
+        </if>
+        <if test="subject_id !=null and subject_id !=''">
+            `subject_id`= #{subject_id}
+        </if>
+        where id=#{id}
+    </update>
+
+    <insert id="addCourse" parameterType="com.qf.entity.Course">
+        insert into course(course_title,course_desc,subject_id)
+         values (#{course_title},#{course_desc},#{subject_id})
+    </insert>
+
+    <resultMap id="getCourseAndSubAndVideo" type="com.qf.entity.Subject">
+        <id property="id" column="sid"></id>
+        <result property="subject_name" column="subject_name"></result>
+        <collection property="courseList" ofType="com.qf.entity.Course">
+            <id property="id" column="cid"></id>
+            <result property="course_title" column="course_title"></result>
+            <result property="course_desc" column="course_desc"></result>
+            <result property="subject_id" column="subject_id"></result>
+            <collection property="videoList" ofType="com.qf.entity.Video">
+                <id property="id" column="vid"></id>
+                <result property="title" column="title"></result>
+                <result property="detail" column="detail"></result>
+                <result property="time" column="time"></result>
+                <result property="play_num" column="play_num"></result>
+                <result property="speaker_id" column="speaker_id"></result>
+                <result property="course_id" column="course_id"></result>
+                <result property="video_url" column="video_url"></result>
+                <result property="image_url" column="image_url"></result>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="selCourseAndVideoBySubjectId" resultMap="getCourseAndSubAndVideo">
+        select
+        video.id vid,video.*,
+        course.id cid, course.*,
+        subject.id sid,subject.*
+        from video,course,subject where course.subject_id = subject.id and video.course_id=course.id and course.subject_id=#{course.subject_id}
+    </select>
+
+    <resultMap id="getCourseAndVideoAndSpeaker" type="com.qf.entity.Course">
+        <id property="id" column="cid"></id>
+        <result property="course_title" column="course_title"></result>
+        <result property="course_desc" column="course_desc"></result>
+        <result property="subject_id" column="subject_id"></result>
+            <collection property="videoList" ofType="com.qf.entity.Video">
+                <id property="id" column="vid"></id>
+                <result property="title" column="title"></result>
+                <result property="detail" column="detail"></result>
+                <result property="time" column="time"></result>
+                <result property="play_num" column="play_num"></result>
+                <result property="speaker_id" column="speaker_id"></result>
+                <result property="course_id" column="course_id"></result>
+                <result property="video_url" column="video_url"></result>
+                <result property="image_url" column="image_url"></result>
+                <association property="speaker" javaType="com.qf.entity.Speaker">
+                    <id property="id" column="sid"></id>
+                    <result property="speaker_name" column="speaker_name"></result>
+                    <result property="speaker_desc" column="speaker_desc"></result>
+                    <result property="speaker_job" column="speaker_job"></result>
+                    <result property="head_img_url" column="head_img_url"></result>
+                </association>
+            </collection>
+
+    </resultMap>
+
+    <select id="selCourseAndVideoBySubjectName" resultMap="getCourseAndVideoAndSpeaker">
+        select
+        video.id vid,video.*,
+        course.id cid, course.*,
+        speaker.id sid,speaker.*
+        from course,video,speaker
+        where  video.course_id=course.id
+        and video.speaker_id=speaker.id
+        and video.course_id=#{video.course_id}
+    </select>
+
+    <select id="selCourseBySubjectId" resultMap="getCourseAndSub">
+        select * from course,subject where course.subject_id = subject.id and course.subject_id=#{course.subject_id}
+    </select>
+
+
+    <resultMap id="getCourseAndVideo" type="com.qf.entity.Video">
+        <id property="id" column="id"></id>
+        <result property="title" column="title"></result>
+        <result property="detail" column="detail"></result>
+        <result property="time" column="time"></result>
+        <result property="play_num" column="play_num"></result>
+        <result property="speaker_id" column="speaker_id"></result>
+        <result property="course_id" column="course_id"></result>
+        <result property="video_url" column="video_url"></result>
+        <result property="image_url" column="image_url"></result>
+        <association property="course" javaType="com.qf.entity.Course">
+            <id property="id" column="id"></id>
+            <result property="course_title" column="course_title"></result>
+            <result property="course_desc" column="course_desc"></result>
+            <result property="subject_id" column="subject_id"></result>
+        </association>
+    </resultMap>
+
+    <select id="getAllVideo" resultMap="getCourseAndVideo">
+        select * from video,course where video.course_id=course.id and course.subject_id=#{course.subject_id}
+    </select>
+</mapper>

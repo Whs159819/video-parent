@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="video-web" />
+        <module name="sys-dao" />
+        <module name="video-util" />
+        <module name="sys-service" />
+        <module name="git-01" />
+        <module name="video-service" />
+        <module name="sys-web" />
+        <module name="context-sys" />
+        <module name="video-dao" />
+        <module name="redis-02" />
+        <module name="redis-01" />
+        <module name="springboot-01" />
+        <module name="video-pojo" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="maven-archiver (1)" target="1.5" />
+      <module name="maven-archiver (2)" target="1.5" />
+      <module name="maven-archiver (3)" target="1.5" />
+      <module name="music-dao" target="1.5" />
+      <module name="music-dao (1)" target="1.5" />
+      <module name="music-parent" target="1.5" />
+      <module name="music-parent (1)" target="1.5" />
+      <module name="music-service" target="1.5" />
+      <module name="music-service (1)" target="1.5" />
+      <module name="music-web" target="1.7" />
+      <module name="music-web (1)" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="redis-02" options="-parameters" />
+      <module name="springboot-01" options="-parameters" />
+    </option>
+  </component>
+</project>

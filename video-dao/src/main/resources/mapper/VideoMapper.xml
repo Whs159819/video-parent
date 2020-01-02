@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.dao.VideoMapper">
+
+    <sql id="videoQueryVo">
+
+            <if test="title != null and title != ''">
+                AND title LIKE '%${title}%'
+            </if>
+            <if test="speaker_id != null and speaker_id != ''">
+                AND speaker_id = #{speaker_id}
+            </if>
+            <if test="course_id != null and course_id != ''">
+                AND course_id = #{course_id}
+            </if>
+
+    </sql>
+
+<resultMap id="videoMap" type="com.qf.entity.Video">
+    <id property="id" column="vid"></id>
+    <result property="title" column="title"></result>
+    <result property="detail" column="detail"></result>
+    <result property="time" column="time"></result>
+    <result property="play_num" column="play_num"></result>
+    <result property="speaker_id" column="speaker_id"></result>
+    <result property="course_id" column="course_id"></result>
+    <result property="video_url" column="video_url"></result>
+    <result property="image_url" column="image_url"></result>
+    <association property="speaker" javaType="com.qf.entity.Speaker">
+        <id property="id" column="sid"></id>
+        <result property="speaker_name" column="speaker_name"></result>
+        <result property="speaker_desc" column="speaker_desc"></result>
+        <result property="speaker_job" column="speaker_job"></result>
+        <result property="head_img_url" column="head_img_url"></result>
+    </association>
+
+    <association property="course" javaType="com.qf.entity.Course">
+        <id property="id" column="cid"></id>
+        <result property="course_title" column="course_title"></result>
+        <result property="course_desc" column="course_desc"></result>
+        <result property="subject_id" column="subject_id"></result>
+    </association>
+</resultMap>
+
+    <select id="getAllVideoByQuary" resultMap="videoMap" >
+        select
+        video.id vid,video.*,
+        course.id cid,course.*,
+        speaker.id sid,speaker.*
+        from video,speaker,course
+        where video.speaker_id=speaker.id
+        and video.course_id=course.id
+        <include refid="videoQueryVo"/>
+        <if test="start != null">
+            limit #{start}, #{rows}
+        </if>
+    </select>
+
+    <select id="getSpeaker" resultType="com.qf.entity.Speaker">
+        select * from speaker
+    </select>
+
+    <select id="getCourse" resultType="com.qf.entity.Course">
+        select * from course
+    </select>
+
+    <select id="getVideoCount" resultType="Integer">
+        select count(1) from video where 1=1
+        <include refid="videoQueryVo"/>
+    </select>
+
+    <select id="getVideoById" resultType="com.qf.entity.Video">
+        select * from video where id=#{id}
+    </select>
+
+    <update id="updateVideoById" parameterType="com.qf.entity.Video">
+        update video set
+        <if test="title!=null and title !=''">
+            `title`=#{title},
+        </if>
+
+        <if test="speaker_id!=null and speaker_id !=''">
+            `speaker_id`=#{speaker_id},
+        </if>
+
+        <if test="course_id!=null and course_id !=''">
+            `course_id`=#{course_id},
+        </if>
+
+        <if test="time!=null and time !=''">
+            `time`=#{time},
+        </if>
+
+        <if test="image_url!=null and image_url !=''">
+           `image_url`=#{image_url},
+        </if>
+
+        <if test="video_url!=null and video_url !=''">
+            `video_url`=#{video_url},
+        </if>
+
+        <if test="detail!=null and detail !=''">
+            `detail`=#{detail},
+        </if>
+
+        <if test="play_num!=null and play_num !=''">
+            `play_num`=#{play_num}+1
+        </if>
+        where id=#{id}
+    </update>
+
+    <delete id="delVideoById" parameterType="Integer">
+        delete from video where id =#{id}
+    </delete>
+
+    <insert id="addVideo" parameterType="com.qf.entity.Video">
+        insert into video (video.title,video.detail,video.time,video.speaker_id,video.course_id,video.video_url,video.image_url,video.play_num)
+        values
+        (#{title},#{detail},#{time},#{speaker_id},#{course_id},#{video_url},#{image_url},#{play_num})
+    </insert>
+
+    <select id="showVideo" resultMap="videoMap">
+       select
+        video.id vid,video.*,
+        course.id cid,course.*,
+        speaker.id sid,speaker.*
+        from video,speaker,course
+        where video.speaker_id=speaker.id
+        and video.course_id=course.id
+        and video.id=#{video.id}
+    </select>
+
+</mapper>

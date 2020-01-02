@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.dao.UserMapper">
+
+<select id="getAllUser" resultType="com.qf.entity.User">
+    select * from user where email=#{email} and password=#{password}
+</select>
+
+    <insert id="addUser" parameterType="com.qf.entity.User">
+        insert into user (email,password) value (#{email},#{password})
+    </insert>
+
+    <select id="getUserByEmail" resultType="com.qf.entity.User">
+        select * from user where email=#{email}
+    </select>
+    
+    <update id="updateUserByEmail" parameterType="com.qf.entity.User">
+        update user
+
+        <set >
+            <if test="id != null" >
+                id = #{id,jdbcType=INTEGER},
+            </if>
+            <if test="email != null" >
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phoneNum != null" >
+                phoneNum = #{phoneNum,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null" >
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="nickName != null" >
+                nickName = #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null" >
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="birthday != null" >
+                birthday = #{birthday,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null" >
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl != null" >
+                imgUrl = #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where  email = #{email}
+    </update>
+    
+    <select id="getUserByPassword" resultType="com.qf.entity.User">
+        select * from user where password=#{password}
+    </select>
+
+</mapper>
